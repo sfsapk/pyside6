@@ -26,31 +26,38 @@ jobs:
 
       - name: Setup Android SDK/NDK
         run: |
-          # Установка Android SDK
           mkdir -p /home/runner/android-sdk
           wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O cmdline-tools.zip
           unzip cmdline-tools.zip -d /home/runner/android-sdk
           mv /home/runner/android-sdk/cmdline-tools /home/runner/android-sdk/latest
           
-          # Установка Android NDK
           wget https://dl.google.com/android/repository/android-ndk-r25c-linux.zip
           unzip android-ndk-r25c-linux.zip -d /home/runner
           
-          echo "export ANDROID_SDK_ROOT=/home/runner/android-sdk" >> $GITHUB_ENV
+          echo "export ANDROID_HOME=/home/runner/android-sdk" >> $GITHUB_ENV
           echo "export ANDROID_NDK_HOME=/home/runner/android-ndk-r25c" >> $GITHUB_ENV
           
-          # Проверка установки
-          ls -la /home/runner/android-ndk-r25c
+          yes | /home/runner/android-sdk/latest/bin/sdkmanager --licenses
 
       - name: Install Buildozer
         run: |
           pip install --upgrade pip wheel
           pip install buildozer cython==0.29.36
 
+      - name: Initialize Buildozer
+        run: |
+          buildozer init
+          sed -i 's/#android.accept_sdk_license = False/android.accept_sdk_license = True/' buildozer.spec
+
+      - name: Clean previous builds
+        run: |
+          rm -rf .buildozer
+          mkdir -p .buildozer
+
       - name: Build APK
         run: |
           buildozer -v android clean
-          buildozer -v android debug deploy
+          buildozer -v android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
