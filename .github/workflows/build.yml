@@ -22,23 +22,32 @@ jobs:
             git zip unzip openjdk-17-jdk \
             python3-pip autoconf libtool pkg-config \
             zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo6 \
-            cmake cython3
+            cmake cython3 coreutils  # Добавляем coreutils для yes
 
       - name: Setup Android SDK/NDK
         run: |
+          # Установка Android SDK с правильной структурой
           mkdir -p /home/runner/android-sdk/cmdline-tools
           wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O cmdline-tools.zip
           unzip cmdline-tools.zip -d /home/runner/android-sdk/cmdline-tools
           mv /home/runner/android-sdk/cmdline-tools/cmdline-tools /home/runner/android-sdk/cmdline-tools/latest
 
+          # Установка Android NDK
           wget https://dl.google.com/android/repository/android-ndk-r25c-linux.zip
           unzip android-ndk-r25c-linux.zip -d /home/runner
 
-          echo "export ANDROID_HOME=/home/runner/android-sdk" >> $GITHUB_ENV
-          echo "export ANDROID_NDK_HOME=/home/runner/android-ndk-r25c" >> $GITHUB_ENV
-          echo "export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH" >> $GITHUB_ENV
+          # Настройка переменных окружения
+          echo "ANDROID_HOME=/home/runner/android-sdk" >> $GITHUB_ENV
+          echo "ANDROID_NDK_HOME=/home/runner/android-ndk-r25c" >> $GITHUB_ENV
+          echo "PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH" >> $GITHUB_ENV
 
-          yes | sdkmanager --licenses
+          # Проверка доступности sdkmanager
+          which sdkmanager
+
+          # Принятие лицензий (без yes)
+          mkdir -p ~/.android
+          touch ~/.android/repositories.cfg
+          echo -e "\n\n\n\n\n\n\n\n\n\n" | sdkmanager --licenses > /dev/null 2>&1
 
       - name: Install Buildozer
         run: |
