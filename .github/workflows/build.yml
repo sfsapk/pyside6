@@ -26,18 +26,21 @@ jobs:
 
       - name: Setup Android SDK/NDK
         run: |
-          mkdir -p /home/runner
+          # Установка Android SDK
+          mkdir -p /home/runner/android-sdk
           wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O cmdline-tools.zip
           unzip cmdline-tools.zip -d /home/runner/android-sdk
           mv /home/runner/android-sdk/cmdline-tools /home/runner/android-sdk/latest
-          mkdir -p /home/runner/android-sdk/platform-tools
           
+          # Установка Android NDK
           wget https://dl.google.com/android/repository/android-ndk-r25c-linux.zip
           unzip android-ndk-r25c-linux.zip -d /home/runner
-          mv /home/runner/android-ndk-r25c /home/runner/android-ndk-r25c
-
+          
           echo "export ANDROID_SDK_ROOT=/home/runner/android-sdk" >> $GITHUB_ENV
           echo "export ANDROID_NDK_HOME=/home/runner/android-ndk-r25c" >> $GITHUB_ENV
+          
+          # Проверка установки
+          ls -la /home/runner/android-ndk-r25c
 
       - name: Install Buildozer
         run: |
