@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4  # Обновлено до v4
+      - uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -20,7 +20,7 @@ jobs:
       - name: Install Buildozer dependencies
         run: |
           sudo apt update
-          sudo apt install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake
+          sudo apt install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo6 cmake
           pip install buildozer
 
       - name: Build APK
@@ -29,7 +29,7 @@ jobs:
           ls -la ./bin/
         
       - name: Upload APK
-        uses: actions/upload-artifact@v4  # Исправлено на v4
+        uses: actions/upload-artifact@v4
         with:
           name: myapp.apk
           path: ./bin/*.apk
