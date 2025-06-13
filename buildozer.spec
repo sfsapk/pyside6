@@ -5,15 +5,14 @@ package.domain = org.example
 source.dir = .
 source.include_exts = py,png,jpg,kv,atlas
 version = 0.1
-requirements = python3, PySide6
+requirements = python3, cython==0.29.36, PySide6==6.6.0
 orientation = portrait
-osx.python_version = 3
-osx.kivy_version = 2.0.0
 fullscreen = 0
-android.permissions = INTERNET
-android.api = 30
-android.minapi = 21
-android.ndk = 23b
-android.sdk = 33
-p4a.branch = develop
-android.arch = arm64-v8a
+
+# Актуальные настройки Android (вместо устаревших)
+android.archs = arm64-v8a
+android.ndk_path = $HOME/.buildozer/android/platform/android-ndk-r25c
+android.sdk_path = $HOME/.buildozer/android/platform/android-sdk
+android.min_sdk_version = 21
+android.target_sdk_version = 33
+android.enable_androidx = True
